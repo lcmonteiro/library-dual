@@ -1,7 +1,7 @@
 # Dual - Automatic Differentiation Library
 
 ## Overview
-This C++ library provides an implementation of dual numbers for automatic differentiation. It enables computation of function values and their derivatives simultaneously using template metaprogramming. The library supports various mathematical operations, including addition, multiplication, and exponentiation, while automatically tracking derivatives.
+This C++ library provides an implementation of dual numbers for automatic differentiation. It enables computation of function values and their derivatives simultaneously using template metaprogramming. The library supports various mathematical operations, including addition, multiplication, and exponentiation, ..., while automatically tracking derivatives.
 
 ## Features
 - **Automatic Differentiation**: Computes function derivatives alongside function values.
@@ -66,7 +66,7 @@ This library is open-source and available under the MIT License.
 Contributions and improvements are welcome! Feel free to fork the repository and submit pull requests.
 
 ## Author
-Developed by [Your Name].
+Developed by Luis Monteiro.
 
 ## References
 - [Automatic Differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation)
