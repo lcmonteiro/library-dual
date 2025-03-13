@@ -49,6 +49,15 @@ The library provides:
 - **Addition (`+`)**
 - **Multiplication (`*`)**
 - **Exponentiation (`std::exp`)**
+- **Addition (`+`)**
+- **Subtraction (`-`)**
+- **Multiplication (`*`)**
+- **Division (`/`)**
+- **Exponentiation (`std::exp`)**
+- **Power (`std::pow`)**
+- **Cosine (`std::cos`)**
+- **Sine (`std::sin`)**
+- **Logarithm (`std::log`)**
 - **Custom Operations** can be added via template specialization.
 
 ## How It Works
