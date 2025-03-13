@@ -67,6 +67,7 @@ jobs:
         cd googletest
         cmake . -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/gtest
         cmake --build . --target install
+        echo "GTEST_ROOT=${{ github.workspace }}/gtest" >> $GITHUB_ENV
     
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you use a single-configuration generator such as make.
@@ -77,7 +78,8 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
-        -DGTEST_DIR=${{ github.workspace }}/gtest
+      env:
+        GTEST_ROOT: ${{ github.workspace }}/gtest
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
