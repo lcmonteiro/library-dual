@@ -59,6 +59,33 @@ This library represents a number and its derivatives using template-based type i
 - `unary_operation<T, Derived>`: Implements unary operations like `exp`.
 - `indices<Dn...>`: Manages derivative indices for tracking differentiation.
 
+## Steps to Build and Run Tests
+
+1. Install GoogleTest (if not installed):
+
+``` sh
+sudo apt-get install libgtest-dev  # Ubuntu/Debian
+sudo yum install gtest-devel       # Fedora
+brew install googletest            # macOS (Homebrew)
+Create a Build Directory and Compile:
+```
+2. Create a Build Directory and Compile:
+``` sh
+mkdir build && cd build
+cmake ..
+make
+```
+3.Run the Tests:
+``` sh
+./run_tests
+```
+4. Run with CTest:
+``` sh
+ctest --verbose
+```
+
+
+
 ## License
 This library is open-source and available under the MIT License.
 
