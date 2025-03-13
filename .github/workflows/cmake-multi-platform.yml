@@ -54,8 +54,22 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Install Google Test on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtest-dev
+
+    - name: Install Google Test on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        git clone https://github.com/google/googletest.git
+        cd googletest
+        cmake . -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/gtest
+        cmake --build . --target install
+        
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you use a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
