@@ -173,5 +173,20 @@ struct binary_operation
             n.template dvalue<D>(self()->dvalue(make_duo<D>(n1), make_duo<D>(n2)));
         }
     }
+
+  private:
+    /// @brief Updates all derivative values.
+    /// @tparam Dn Differentiation orders.
+    /// @tparam N1 The first number type.
+    /// @tparam N2 The second number type.
+    /// @tparam N The result number type.
+    /// @param n1 The first input number.
+    /// @param n2 The second input number.
+    /// @param n The result number.
+    template <size_t... Dn, class N1, class N2, class N>
+    void update_dvalues(const indices<Dn...>, const N1 &n1, const N2 &n2, N &n) const
+    {
+        (update_dvalue<Dn>(n1, n2, n), ...);
+    }
 };
 } // namespace dual

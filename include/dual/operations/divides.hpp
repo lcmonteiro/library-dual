@@ -42,7 +42,7 @@ struct divides : binary_operation<T, divides<T>>
     /// @return The derivative result.
     auto dvalue(const duo<T> &n1, const T &v2) const
     {
-        return (v2 * n1.d) / (v2 * v2);
+        return n1.d / v2;
     }
 }; // namespace dual
 

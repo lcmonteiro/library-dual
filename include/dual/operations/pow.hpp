@@ -30,7 +30,7 @@ struct pow : binary_operation<T, pow<T>>
     /// @return The derivative of the power function with respect to both variables.
     auto dvalue(const duo<T> &n1, const duo<T> &n2) const
     {
-        return std::pow(n1.v, n2.v - 1) * (n2.v * n1.d + n1.v * n2.d * std::log(n1.v));
+        return std::pow(n1.v, n2.v) * (n2.v * n1.d / n1.v + n2.d * std::log(n1.v));
     }
 
     /// @brief Computes the derivative when the base is a scalar and the exponent is a dual number.
