@@ -27,7 +27,7 @@ struct minus : binary_operation<minus>
 		return n1.d;
 	}
 };
-template <class T1, class T2, plus::enable_t<T1, T2> = 0>
+template <class T1, class T2, minus::enable_t<T1, T2> = 0>
 inline auto operator-(const T1 &n1, const T2 &n2)
 {
 	return std::invoke(minus{}, n1, n2);

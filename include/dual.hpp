@@ -7,3 +7,4 @@
 #include "dual/operations/exp.hpp"
 #include "dual/operations/log.hpp"
 #include "dual/operations/pow.hpp"
+#include "dual/operations/sqrt.hpp"
