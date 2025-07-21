@@ -2,6 +2,7 @@ find_package(GTest REQUIRED)
 
 add_executable(run_tests 
 	operations_sin_test.cpp
+	bug_fixes_test.cpp
 )
 
 target_link_libraries(run_tests 

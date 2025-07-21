@@ -6,27 +6,27 @@ namespace dual
 {
 
 template <class F, class T, std::size_t N>
-inline auto apply(F perdicate, const std::array<T, N> &data)
+inline auto apply(F predicate, const std::array<T, N> &data)
 {
-	return std::apply(perdicate, data);
+	return std::apply(predicate, data);
 }
 
 template <class F, class... Ts>
-inline auto apply(F perdicate, const array<Ts...> &data)
+inline auto apply(F predicate, const array<Ts...> &data)
 {
-	return std::apply(perdicate, data.storage());
+	return std::apply(predicate, data.storage());
 }
 
 template <class F, class... Ts>
-inline auto apply(F perdicate, const std::tuple<Ts...> &data)
+inline auto apply(F predicate, const std::tuple<Ts...> &data)
 {
-	return std::apply(perdicate, data);
+	return std::apply(predicate, data);
 }
 
 template <class F, class T>
-inline auto apply(F perdicate, const T &data)
+inline auto apply(F predicate, const T &data)
 {
-	return std::invoke(perdicate, data);
+	return std::invoke(predicate, data);
 }
 
 } // namespace dual

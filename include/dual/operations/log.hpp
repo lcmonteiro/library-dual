@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <limits>
 
 #include "dual/operations.hpp"
 
@@ -16,7 +17,12 @@ struct log : unary_operation<log>
 	template <class T>
 	auto dvalue(const duo<T> &n) const
 	{
-		return n.d / n.v;
+		// If the input is invalid for logarithm (n.v <= 0), 
+		// the derivative should also be NaN
+		if (n.v < static_cast<T>(0)) {
+			return std::numeric_limits<T>::quiet_NaN();
+		}
+		return n.d / n.v;  // This handles n.v == 0 case naturally (produces inf)
 	}
 };
 } // namespace dual
