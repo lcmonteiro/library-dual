@@ -6,39 +6,47 @@
 
 namespace dual
 {
-/// @brief Represents the natural logarithm function as a unary operation.
-/// @tparam T The type of the number being operated on.
-template <class T>
-struct log : unary_operation<T, log<T>>
+struct log : unary_operation<log>
 {
-    /// @brief Computes the natural logarithm of the input value.
-    /// @param v The input value.
-    /// @return The computed natural logarithm of v.
-    auto value(const T &v) const
-    {
-        return std::log(v);
-    }
-
-    /// @brief Computes the derivative of the natural logarithm function.
-    /// @param n A duo struct containing the value and its derivative.
-    /// @return The computed derivative of the logarithm function.
-    auto dvalue(const duo<T> &n) const
-    {
-        return n.d / n.v;
-    }
+	template <class T>
+	auto value(const T &v) const
+	{
+		return std::log(v);
+	}
+	template <class T>
+	auto dvalue(const duo<T> &n) const
+	{
+		return n.d / n.v;
+	}
 };
 } // namespace dual
 
 namespace std
 {
-/// @brief Computes the natural logarithm for a dual number.
-/// @tparam T The type of the number.
-/// @tparam D Parameter pack representing derivative indices.
-/// @param n The dual number input.
-/// @return The natural logarithm of the given dual number.
-template <class T, size_t... D>
-inline auto log(const dual::number<T, D...> &n)
+template <class T, dual::log::enable_t<T> = 0>
+inline auto log(const T &n)
 {
-    return std::invoke(dual::log<T>{}, n);
+	return std::invoke(dual::log{}, n);
 }
-}; // namespace std
+} // namespace std
+
+namespace dual
+{
+struct log_transform : transform_unary_operation<log_transform>
+{
+	template <class T>
+	auto transform(const T &n) const
+	{
+		return std::log(n);
+	}
+};
+} // namespace dual
+
+namespace std
+{
+template <class T, dual::log_transform::enable_t<T> = 0>
+inline auto log(const T &n)
+{
+	return std::invoke(dual::log_transform{}, n);
+}
+} // namespace std
