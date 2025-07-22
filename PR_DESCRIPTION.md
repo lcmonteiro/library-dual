@@ -54,19 +54,48 @@ auto neg_x = -x;  // Returns dual::number with value=-5.0, derivative=-1.0 ✅
 
 **Fix**: Corrected parameter names in `apply.hpp`, `summation.hpp`, `product.hpp`, and `transform.hpp`.
 
-## ✅ Testing
+## ✅ Comprehensive Unit Testing
 
-Added comprehensive test suite (`tests/bug_fixes_test.cpp`) with 10 test cases covering:
+Added extensive test suite with **93 comprehensive unit tests** covering all mathematical operations:
 
-- ✅ Logarithm derivative correctness for negative, zero, and positive inputs
-- ✅ Unary minus operator functionality and derivative propagation
-- ✅ Complex expression handling with unary minus
-- ✅ Multiple derivative indices support
-- ✅ Chain rule preservation after fixes
-- ✅ Edge case validation
-- ✅ Functional utilities compilation with corrected names
+### 📋 **Test Coverage by Operation**:
+- **Plus Operation** (6 tests) - Addition with dual numbers, scalars, commutativity
+- **Minus Operation** (7 tests) - Subtraction scenarios and edge cases  
+- **Unary Minus Operation** (7 tests) - Negation operator functionality
+- **Multiplies Operation** (9 tests) - Product rule, zero/one cases, negatives
+- **Divides Operation** (9 tests) - Division rule, edge cases, division by zero
+- **Exponential Operation** (9 tests) - exp(x) with various inputs and overflow
+- **Logarithm Operation** (10 tests) - log(x) including fixed NaN derivative bug
+- **Power Operation** (10 tests) - pow(x,y) with integer/fractional exponents
+- **Square Root Operation** (10 tests) - sqrt(x) with domain validation
+- **Cosine Operation** (11 tests) - cos(x) with special values and chain rule
+- **Sine Operation** (5 tests) - Existing sin(x) tests
 
-**All tests pass**: 15/15 ✅
+### 🔧 **Test Features**:
+- Validates both function values and derivatives
+- Tests edge cases (zero, infinity, NaN, negative inputs)
+- Verifies mathematical identities and relationships  
+- Tests chain rule applications
+- Covers multiple derivative indices
+- Tests scalar-dual number mixed operations
+
+### 📁 **Test File Structure**:
+```
+tests/
+├── operations_sin_test.cpp        (5 tests)
+├── operations_plus_test.cpp       (6 tests)
+├── operations_minus_test.cpp      (7 tests)
+├── operations_unary_minus_test.cpp (7 tests)
+├── operations_multiplies_test.cpp (9 tests)
+├── operations_divides_test.cpp    (9 tests)
+├── operations_exp_test.cpp        (9 tests)
+├── operations_log_test.cpp        (10 tests)
+├── operations_pow_test.cpp        (10 tests)
+├── operations_sqrt_test.cpp       (10 tests)
+└── operations_cos_test.cpp        (11 tests)
+```
+
+**All tests pass**: 93/93 ✅
 
 ## 🔍 Bugs Investigated but Not Present
 
