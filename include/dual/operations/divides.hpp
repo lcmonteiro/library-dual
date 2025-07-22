@@ -4,71 +4,61 @@
 
 namespace dual
 {
-/// @brief Implements division operation for dual numbers.
-/// @tparam T The underlying data type (e.g., float, double).
-template <class T>
-struct divides : binary_operation<T, divides<T>>
+struct divides : binary_operation<divides>
 {
-    /// @brief Computes the value of the division.
-    /// @param v1 Numerator.
-    /// @param v2 Denominator.
-    /// @return Result of v1 / v2.
-    auto value(const T &v1, const T &v2) const
-    {
-        return v1 / v2;
-    }
-
-    /// @brief Computes the derivative of the division operation.
-    /// @param n1 The first dual number (numerator).
-    /// @param n2 The second dual number (denominator).
-    /// @return The derivative result.
-    auto dvalue(const duo<T> &n1, const duo<T> &n2) const
-    {
-        return (n2.v * n1.d - n1.v * n2.d) / (n2.v * n2.v);
-    }
-
-    /// @brief Computes the derivative when the numerator is a scalar.
-    /// @param v1 The scalar numerator.
-    /// @param n2 The dual number denominator.
-    /// @return The derivative result.
-    auto dvalue(const T &v1, const duo<T> &n2) const
-    {
-        return (-v1 * n2.d) / (n2.v * n2.v);
-    }
-
-    /// @brief Computes the derivative when the denominator is a scalar.
-    /// @param n1 The dual number numerator.
-    /// @param v2 The scalar denominator.
-    /// @return The derivative result.
-    auto dvalue(const duo<T> &n1, const T &v2) const
-    {
-        return (v2 * n1.d) / (v2 * v2);
-    }
-}; // namespace dual
-
-/// @brief Overloaded division operator for dual numbers and scalars.
-/// @tparam T The underlying data type.
-/// @tparam D Variadic parameter pack representing differentiation indices.
-/// @param n1 The dual number numerator.
-/// @param n2 The scalar denominator.
-/// @return The result of the division.
-template <class T, size_t... D>
-inline auto operator/(const number<T, D...> &n1, const T &n2)
+	template <class T>
+	auto value(const T &v1, const T &v2) const
+	{
+		return v1 / v2;
+	}
+	template <class T>
+	auto dvalue(const duo<T> &n1, const duo<T> &n2) const
+	{
+		return (n2.v * n1.d - n1.v * n2.d) / (n2.v * n2.v);
+	}
+	template <class T>
+	auto dvalue(const T &v1, const duo<T> &n2) const
+	{
+		return (-v1 * n2.d) / (n2.v * n2.v);
+	}
+	template <class T>
+	auto dvalue(const duo<T> &n1, const T &v2) const
+	{
+		return (v2 * n1.d) / (v2 * v2);
+	}
+};
+template <class T1, class T2, divides::enable_t<T1, T2> = 0>
+inline auto operator/(const T1 &n1, const T2 &n2)
 {
-    return std::invoke(divides<T>{}, n1, n2);
+	return std::invoke(divides{}, n1, n2);
 }
 
-/// @brief Overloaded division operator for scalars and dual numbers.
-/// @tparam T The underlying data type.
-/// @tparam N Type of the scalar numerator.
-/// @tparam D Variadic parameter pack representing differentiation indices.
-/// @param n1 The scalar numerator.
-/// @param n2 The dual number denominator.
-/// @return The result of the division.
-template <class T, class N, size_t... D>
-inline auto operator/(const N &n1, const number<T, D...> &n2)
+struct divides_transform : transform_binary_operation<divides_transform>
 {
-    return std::invoke(divides<T>{}, n1, n2);
+	template <class T1, class T2>
+	auto transform(const T1 &n1, const T2 &n2) const
+	{
+		return n1 / n2;
+	}
+};
+template <class T1, class T2, class = divides_transform::enable_t<T1, T2>>
+inline auto operator/(const T1 &c1, const T2 &c2)
+{
+	return std::invoke(divides_transform{}, c1, c2);
+}
+
+struct divides_broadcast : broadcast_operation<divides_broadcast>
+{
+	template <class T1, class T2>
+	auto transform(const T1 &n1, const T2 &n2) const
+	{
+		return n1 / n2;
+	}
+};
+template <class T1, class T2, divides_broadcast::enable_t<T1, T2> = 0>
+inline auto operator/(const T1 &c1, const T2 &c2)
+{
+	return std::invoke(divides_broadcast{}, c1, c2);
 }
 
 } // namespace dual

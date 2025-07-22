@@ -6,39 +6,49 @@
 
 namespace dual
 {
-/// @brief Represents the exponential function as a unary operation.
-/// @tparam T The type of the number being operated on.
-template <class T>
-struct exp : unary_operation<T, exp<T>>
+struct exp : unary_operation<exp>
 {
-    /// @brief Computes the exponential value of the input.
-    /// @param v The input value.
-    /// @return The computed exponential value.
-    auto value(const T &v) const
-    {
-        return std::exp(v);
-    }
+	template <class T>
+	auto value(const T &v) const
+	{
+		return std::exp(v);
+	}
 
-    /// @brief Computes the derivative of the exponential function.
-    /// @param n A duo struct containing the value and its derivative.
-    /// @return The computed derivative of the exponential function.
-    auto dvalue(const duo<T> &n) const
-    {
-        return std::exp(n.v) * n.d;
-    }
+	template <class T>
+	auto dvalue(const duo<T> &n) const
+	{
+		return std::exp(n.v) * n.d;
+	}
 };
 } // namespace dual
 
 namespace std
 {
-/// @brief Computes the exponential function for a dual number.
-/// @tparam T The type of the number.
-/// @tparam D Parameter pack representing derivative indices.
-/// @param n The dual number input.
-/// @return The exponential of the given dual number.
-template <class T, size_t... D>
-inline auto exp(const dual::number<T, D...> &n)
+template <class T, dual::exp::enable_t<T> = 0>
+inline auto exp(const T &n)
 {
-    return std::invoke(dual::exp<T>{}, n);
+	return std::invoke(dual::exp{}, n);
 }
-}; // namespace std
+} // namespace std
+
+namespace dual
+{
+struct exp_transform : transform_unary_operation<exp_transform>
+{
+	template <class T>
+	auto transform(const T &n) const
+	{
+		return std::exp(n);
+	}
+};
+} // namespace dual
+
+namespace std
+{
+template <class T, dual::exp_transform::enable_t<T> = 0>
+inline auto exp(const T &n)
+{
+	return std::invoke(dual::exp_transform{}, n);
+}
+} // namespace std
+

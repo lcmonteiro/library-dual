@@ -1,122 +1,117 @@
 #pragma once
 
-#include <cstddef>
 #include <type_traits>
+#include <utility>
 
 namespace dual
 {
-    /// @brief A variadic template representing a set of indices.
-    template <size_t... I>
-    struct indices
-    {
-        /// @brief Defines a template alias that applies a template to a type with indices.
-        template <template <class, size_t...> class Type, class T>
-        using type = Type<T, I...>;
-    };
+template <size_t... I>
+struct indices
+{
+	template <
+		template <class, size_t...>
+		class Type,
+		class T>
+	using type = Type<T, I...>;
+};
 
-    /// @brief Checks whether an index exists within a given indices set.
-    template <size_t I, class Indices>
-    struct has_indice;
+template <size_t... A, size_t... B>
+constexpr auto operator+(indices<A...>, indices<B...>)
+{
+	return indices<A..., B...>{};
+}
 
-    template <size_t I, size_t... Is>
-    struct has_indice<I, indices<Is...>>
-    {
-        static constexpr auto value = ((I == Is) || ...);
-    };
+template <size_t I, size_t... Is>
+constexpr bool contains = ((I == Is) || ...);
 
-    namespace impl
-    {
-        /// @brief Helper struct for computing a unique set of indices.
-        template <class I, class Iout>
-        struct indices_set;
+// ========== FILTER ================
+namespace impl
+{
+template <class Indices, template <size_t> class Predicate>
+struct indices_filter;
 
-        template <size_t... Iout>
-        struct indices_set<indices<>, indices<Iout...>>
-        {
-            using type = indices<Iout...>;
-        };
+template <template <size_t> class Predicate, size_t... Is>
+struct indices_filter<indices<Is...>, Predicate>
+{
+	template <size_t I>
+	using wrap_if = std::conditional_t<Predicate<I>::value, indices<I>, indices<>>;
+	using type = decltype((indices<>{} + ... + wrap_if<Is>{}));
+};
+} // namespace impl
 
-        template <size_t I, size_t... Is, size_t... Iout>
-        struct indices_set<indices<I, Is...>, indices<Iout...>>
-        {
-            using type = std::conditional_t<
-                has_indice<I, indices<Iout...>>::value,
-                typename indices_set<indices<Is...>, indices<Iout...>>::type,
-                typename indices_set<indices<Is...>, indices<Iout..., I>>::type>;
-        };
-    } // namespace impl
+template <class Indices, template <size_t> class Predicate>
+using indices_filter_t = typename impl::indices_filter<Indices, Predicate>::type;
 
-    /// @brief Computes the unique set of indices from a given indices set.
-    template <class Indices>
-    using indices_set_t = typename impl::indices_set<Indices, indices<>>::type;
+// ========== INTERSECTION ==========
+namespace impl
+{
+template <class IndicesA, class IndicesB>
+struct intersection;
 
-    namespace impl
-    {
-        /// @brief Computes the intersection of two indices sets.
-        template <class Ia, class Ib, class Iout>
-        struct indices_interception;
+template <size_t... Ia, size_t... Ib>
+struct intersection<indices<Ia...>, indices<Ib...>>
+{
+	template <size_t I>
+	using in_b = std::bool_constant<contains<I, Ib...>>;
+	using type = indices_filter_t<indices<Ia...>, in_b>;
+};
+} // namespace impl
+template <class IndicesA, class IndicesB>
+using indices_interception_t = typename impl::intersection<IndicesA, IndicesB>::type;
 
-        template <size_t... Ib, size_t... Iout>
-        struct indices_interception<indices<>, indices<Ib...>, indices<Iout...>>
-        {
-            using type = indices<Iout...>;
-        };
+// ========== DIFFERENCE ==========
+namespace impl
+{
+template <class IndicesA, class IndicesB>
+struct difference;
 
-        template <size_t I, size_t... Ia, size_t... Ib, size_t... Iout>
-        struct indices_interception<indices<I, Ia...>, indices<Ib...>, indices<Iout...>>
-        {
-            using type = std::conditional_t<
-                has_indice<I, indices<Ib...>>::value,
-                typename indices_interception<indices<Ia...>, indices<Ib...>, indices<Iout..., I>>::type,
-                typename indices_interception<indices<Ia...>, indices<Ib...>, indices<Iout...>>::type>;
-        };
-    } // namespace impl
+template <size_t... Ia, size_t... Ib>
+struct difference<indices<Ia...>, indices<Ib...>>
+{
+	template <size_t I>
+	using not_in_b = std::bool_constant<!contains<I, Ib...>>;
+	using type = indices_filter_t<indices<Ia...>, not_in_b>;
+};
+} // namespace impl
 
-    /// @brief Computes the intersection of two indices sets.
-    template <class IndicesA, class IndicesB>
-    using indices_interception_t = typename impl::indices_interception<IndicesA, IndicesB, indices<>>::type;
+template <class IndicesA, class IndicesB>
+using indices_difference_t = typename impl::difference<IndicesA, IndicesB>::type;
 
-    namespace impl
-    {
-        /// @brief Computes the union of two indices sets.
-        template <class Ia, class Ib>
-        struct indices_union;
+// ========== CONCAT ==========
+namespace impl
+{
+template <class Ia, class Ib, class Ic>
+struct indices_concat;
 
-        template <size_t... Ia, size_t... Ib>
-        struct indices_union<indices<Ia...>, indices<Ib...>>
-        {
-            using type = indices_set_t<indices<Ia..., Ib...>>;
-        };
-    } // namespace impl
+template <size_t... Ia, size_t... Ib, size_t... Ic>
+struct indices_concat<indices<Ia...>, indices<Ib...>, indices<Ic...>>
+{
+	using type = indices<Ia..., Ib..., Ic...>;
+};
 
-    /// @brief Computes the union of two indices sets.
-    template <class IndicesA, class IndicesB>
-    using indices_union_t = typename impl::indices_union<IndicesA, IndicesB>::type;
+} // namespace impl
 
-    namespace impl
-    {
-        /// @brief Computes the difference between two indices sets.
-        template <class Ia, class Ib, class Iout>
-        struct indices_difference;
+template <class IndicesA, class IndicesB, class IndicesC>
+using indices_concat_t = typename impl::indices_concat<IndicesA, IndicesB, IndicesC>::type;
 
-        template <size_t... Ib, size_t... Iout>
-        struct indices_difference<indices<>, indices<Ib...>, indices<Iout...>>
-        {
-            using type = indices<Iout...>;
-        };
+// ========== SEQUENCE ==========
+namespace impl
+{
+template <std::size_t StartSeq, class IndexSeq>
+struct indices_sequence;
 
-        template <size_t I, size_t... Ia, size_t... Ib, size_t... Iout>
-        struct indices_difference<indices<I, Ia...>, indices<Ib...>, indices<Iout...>>
-        {
-            using type = std::conditional_t<
-                has_indice<I, indices<Ib...>>::value,
-                typename indices_difference<indices<Ia...>, indices<Ib...>, indices<Iout...>>::type,  ///< Skip I if in B
-                typename indices_difference<indices<Ia...>, indices<Ib...>, indices<Iout..., I>>::type>; ///< Keep I otherwise
-        };
-    } // namespace impl
+template <std::size_t Start, std::size_t... Indices>
+struct indices_sequence<Start, std::index_sequence<Indices...>>
+{
+	using type = indices<(Start + Indices)...>;
+};
+} // namespace impl
 
-    /// @brief Computes the difference between two indices sets.
-    template <class IndicesA, class IndicesB>
-    using indices_difference_t = typename impl::indices_difference<IndicesA, IndicesB, indices<>>::type;
+template <std::size_t Start, std::size_t Size>
+using indices_sequence_t =
+	typename impl::indices_sequence<Start, std::make_index_sequence<Size>>::type;
+
+template <std::size_t Start, class... Ts>
+using indices_sequence_for_t = indices_sequence_t<Start, sizeof...(Ts)>;
 
 } // namespace dual

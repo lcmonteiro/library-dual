@@ -2,75 +2,102 @@
 
 #include <tuple>
 
-/// @namespace dual
-/// @brief Namespace for dual number representation and automatic differentiation.
 namespace dual
 {
-    /// @class number
-    /// @brief Represents a dual number used for automatic differentiation.
-    ///
-    /// @tparam T The underlying numeric type (e.g., double, float).
-    /// @tparam Dn Variadic template parameter representing derivative indices.
-    template <class T, size_t... Dn>
-    struct number
-    {
-        /// @brief Default constructor initializes value to zero.
-        explicit number() = default;
-        
-        /// @brief Constructs a number with an initial value.
-        /// @param init The initial value of the number.
-        explicit number(const T &init) : value_{init}, dvalues_{} {}
+/// @brief Represents a scalar value with associated derivative storage.
+///
+/// @tparam T The underlying scalar type (e.g., float, double, etc.).
+/// @tparam Dn Parameter pack of derivative indices used to define associated derivative storage.
+template <class T, std::size_t... Dn>
+struct number
+{
+	/// @brief Type alias for the underlying scalar type.
+	using value_type = T;
 
-        /// @brief Implicit conversion to the underlying type.
-        /// @return The stored value of the number.
-        operator const T &() const
-        {
-            return value_;
-        }
+	/// @brief Default constructor.
+	explicit number() = default;
 
-        /// @brief Gets the value of the number.
-        /// @return A constant reference to the value.
-        auto value() const -> const auto &
-        {
-            return value_;
-        }
-        
-        /// @brief Sets the value of the number.
-        /// @param value The new value to set.
-        void value(const T &value)
-        {
-            value_ = value;
-        }
+	/// @brief Constructor initializing the scalar value.
+	/// @param init The initial value to store.
+	explicit number(const T &init) : value_{init}, dvalues_{} {}
 
-        /// @brief Gets the derivative value for a specific index.
-        /// @tparam D The derivative index.
-        /// @return A constant reference to the derivative value.
-        template <size_t D>
-        auto dvalue() const -> const auto &
-        {
-            return std::get<dvalue_type<D>>(dvalues_).value;
-        }
+	/// @brief Implicit conversion to the stored scalar value.
+	/// @return Constant reference to the stored value.
+	operator const T &() const { return value_; }
 
-        /// @brief Sets the derivative value for a specific index.
-        /// @tparam D The derivative index.
-        /// @param value The new derivative value.
-        template <size_t D>
-        void dvalue(const T &value)
-        {
-            std::get<dvalue_type<D>>(dvalues_).value = value;
-        }
+	/// @brief Returns the stored scalar value.
+	/// @return Constant reference to the stored value.
+	auto value() const -> const auto & { return value_; }
 
-    protected:
-        /// @brief Internal structure to store derivative values.
-        /// @tparam D The derivative index.
-        template <size_t D>
-        struct dvalue_type
-        {
-            T value{1}; ///< Stores the derivative value, initialized to 1.
-        };
+	/// @brief Sets the stored scalar value.
+	/// @param value The value to store.
+	void value(const T &value) { value_ = value; }
 
-    private:
-        T value_; ///< The primary value of the number.
-        std::tuple<dvalue_type<Dn>...> dvalues_; ///< Tuple storing derivatives for different indices.
-    };
+	/// @brief Retrieves the value of the D-th associated derivative.
+	/// @tparam D The derivative index to retrieve (must be in Dn...).
+	/// @return Constant reference to the stored derivative value.
+	template <std::size_t D>
+	auto dvalue() const -> const auto &
+	{
+		return std::get<dvalue_type<D>>(dvalues_).value;
+	}
+
+	/// @brief Sets the value of the D-th associated derivative.
+	/// @tparam D The derivative index to set (must be in Dn...).
+	/// @param value The value to store for the derivative.
+	template <std::size_t D>
+	void dvalue(const T &value)
+	{
+		std::get<dvalue_type<D>>(dvalues_).value = value;
+	}
+  protected:
+	/// @brief Helper type representing the storage for a specific derivative.
+	/// @tparam D Derivative index.
+	template <std::size_t D>
+	struct dvalue_type
+	{
+		/// @brief The stored value of the derivative, initialized to 1 by default.
+		T value{1.0};
+	};
+
+  private:
+	/// @brief The stored scalar value.
+	T value_{};
+
+	/// @brief Tuple of derivative value storage.
+	std::tuple<dvalue_type<Dn>...> dvalues_;
+};
+
+/// @brief Type trait to detect if a type is a specialization of number<T, S>.
+/// @tparam T Type to test.
+template <class T>
+struct is_number : std::false_type
+{
+};
+
+/// @brief Specialization of is_number for number<T, S>.
+/// @tparam T Value type.
+/// @tparam S Derivative index parameter.
+template <class T, std::size_t... Ds>
+struct is_number<number<T, Ds...>> : std::true_type
+{
+};
+
+/// @brief Helper variable template for is_number.
+/// @tparam T Type to test.
+template <class T>
+constexpr bool is_number_v = is_number<T>::value;
+
+template <class T>
+struct is_number_like : std::is_arithmetic<T>
+{
+};
+template <class T, std::size_t... Ds>
+struct is_number_like<number<T, Ds...>> : std::true_type
+{
+};
+
+template <class T>
+constexpr bool is_number_like_v = is_number_like<T>::value;
+
 } // namespace dual
