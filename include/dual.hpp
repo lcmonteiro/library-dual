@@ -1,6 +1,6 @@
 #include "dual/operations/plus.hpp"
 #include "dual/operations/minus.hpp"
-#include "dual/operations/unary_minus.hpp"
+#include "dual/operations/negate.hpp"
 #include "dual/operations/multiplies.hpp"
 #include "dual/operations/divides.hpp"
 #include "dual/operations/cos.hpp"

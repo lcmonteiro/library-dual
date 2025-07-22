@@ -4,7 +4,7 @@
 
 namespace dual
 {
-struct unary_minus : unary_operation<unary_minus>
+struct negate : unary_operation<negate>
 {
 	template <class T>
 	auto value(const T &v) const
@@ -19,13 +19,13 @@ struct unary_minus : unary_operation<unary_minus>
 	}
 };
 
-template <class T, unary_minus::enable_t<T> = 0>
+template <class T, negate::enable_t<T> = 0>
 inline auto operator-(const T &n)
 {
-	return std::invoke(unary_minus{}, n);
+	return std::invoke(negate{}, n);
 }
 
-struct unary_minus_transform : transform_unary_operation<unary_minus_transform>
+struct negate_transform : transform_unary_operation<negate_transform>
 {
 	template <class T>
 	auto transform(const T &n) const
@@ -34,10 +34,10 @@ struct unary_minus_transform : transform_unary_operation<unary_minus_transform>
 	}
 };
 
-template <class T, unary_minus_transform::enable_t<T> = 0>
+template <class T, negate_transform::enable_t<T> = 0>
 inline auto operator-(const T &n)
 {
-	return std::invoke(unary_minus_transform{}, n);
+	return std::invoke(negate_transform{}, n);
 }
 
 } // namespace dual
