@@ -1,5 +1,6 @@
 #include "dual/operations/plus.hpp"
 #include "dual/operations/minus.hpp"
+#include "dual/operations/unary_minus.hpp"
 #include "dual/operations/multiplies.hpp"
 #include "dual/operations/divides.hpp"
 #include "dual/operations/cos.hpp"
@@ -8,3 +9,5 @@
 #include "dual/operations/log.hpp"
 #include "dual/operations/pow.hpp"
 #include "dual/operations/sqrt.hpp"
+#include "dual/functional/apply.hpp"
+#include "dual/functional/summation.hpp"
