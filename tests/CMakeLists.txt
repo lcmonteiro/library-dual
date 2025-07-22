@@ -4,7 +4,7 @@ add_executable(run_tests
 	operations_sin_test.cpp
 	operations_plus_test.cpp
 	operations_minus_test.cpp
-	operations_unary_minus_test.cpp
+	operations_negate_test.cpp
 	operations_multiplies_test.cpp
 	operations_divides_test.cpp
 	operations_exp_test.cpp

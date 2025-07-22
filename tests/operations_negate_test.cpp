@@ -2,8 +2,8 @@
 #include <cmath>
 #include "dual.hpp"
 
-/// @test Test unary minus basic functionality
-TEST(UnaryMinusOperationTest, BasicUnaryMinus)
+/// @test Test negate basic functionality
+TEST(NegateOperationTest, BasicNegate)
 {
     dual::number<double, 0> x(5.0);
     
@@ -13,8 +13,8 @@ TEST(UnaryMinusOperationTest, BasicUnaryMinus)
     EXPECT_DOUBLE_EQ(result.dvalue<0>(), -1.0);  // d/dx (-x) = -1
 }
 
-/// @test Test unary minus with zero
-TEST(UnaryMinusOperationTest, UnaryMinusZero)
+/// @test Test negate with zero
+TEST(NegateOperationTest, NegateZero)
 {
     dual::number<double, 0> x(0.0);
     
@@ -24,8 +24,8 @@ TEST(UnaryMinusOperationTest, UnaryMinusZero)
     EXPECT_DOUBLE_EQ(result.dvalue<0>(), -1.0);  // derivative is still -1
 }
 
-/// @test Test unary minus with negative number
-TEST(UnaryMinusOperationTest, UnaryMinusNegative)
+/// @test Test negate with negative number
+TEST(NegateOperationTest, NegateNegative)
 {
     dual::number<double, 0> x(-3.0);
     
@@ -35,8 +35,8 @@ TEST(UnaryMinusOperationTest, UnaryMinusNegative)
     EXPECT_DOUBLE_EQ(result.dvalue<0>(), -1.0);  // d/dx (-x) = -1
 }
 
-/// @test Test double unary minus
-TEST(UnaryMinusOperationTest, DoubleUnaryMinus)
+/// @test Test double negation
+TEST(NegateOperationTest, DoubleNegation)
 {
     dual::number<double, 0> x(4.0);
     
@@ -46,8 +46,8 @@ TEST(UnaryMinusOperationTest, DoubleUnaryMinus)
     EXPECT_DOUBLE_EQ(result.dvalue<0>(), 1.0);  // d/dx (-(-x)) = 1
 }
 
-/// @test Test unary minus in expression
-TEST(UnaryMinusOperationTest, UnaryMinusInExpression)
+/// @test Test negate in expression
+TEST(NegateOperationTest, NegateInExpression)
 {
     dual::number<double, 0> x(2.0);
     
@@ -57,8 +57,8 @@ TEST(UnaryMinusOperationTest, UnaryMinusInExpression)
     EXPECT_DOUBLE_EQ(result.dvalue<0>(), -4.0);  // d/dx -(x^2) = -2x = -4
 }
 
-/// @test Test unary minus with multiple indices
-TEST(UnaryMinusOperationTest, MultipleIndices)
+/// @test Test negate with multiple indices
+TEST(NegateOperationTest, MultipleIndices)
 {
     dual::number<double, 0, 1, 2> x(3.0);
     
@@ -70,8 +70,8 @@ TEST(UnaryMinusOperationTest, MultipleIndices)
     EXPECT_DOUBLE_EQ(result.dvalue<2>(), -1.0);
 }
 
-/// @test Test unary minus with large numbers
-TEST(UnaryMinusOperationTest, LargeNumbers)
+/// @test Test negate with large numbers
+TEST(NegateOperationTest, LargeNumbers)
 {
     dual::number<double, 0> x(1e10);
     

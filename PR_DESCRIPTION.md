@@ -24,14 +24,14 @@ This PR addresses multiple critical bugs and issues discovered through systemati
 // log(-1) -> value: NaN, derivative: NaN ✅
 ```
 
-### 2. **Missing Feature: Unary Minus Operator**
+### 2. **Missing Feature: Negate Operator**
 **Severity**: Medium - Missing fundamental operation
 
 **Problem**: Writing `-x` where `x` is a dual number would use implicit conversion to scalar type, losing the dual number structure.
 
-**Root Cause**: No unary minus operator implementation for dual numbers.
+**Root Cause**: No negate operator implementation for dual numbers.
 
-**Fix**: Implemented complete unary minus operator with proper derivative handling.
+**Fix**: Implemented complete negate operator with proper derivative handling.
 
 **Before**:
 ```cpp
@@ -61,7 +61,7 @@ Added extensive test suite with **93 comprehensive unit tests** covering all mat
 ### 📋 **Test Coverage by Operation**:
 - **Plus Operation** (6 tests) - Addition with dual numbers, scalars, commutativity
 - **Minus Operation** (7 tests) - Subtraction scenarios and edge cases  
-- **Unary Minus Operation** (7 tests) - Negation operator functionality
+- **Negate Operation** (7 tests) - Negation operator functionality
 - **Multiplies Operation** (9 tests) - Product rule, zero/one cases, negatives
 - **Divides Operation** (9 tests) - Division rule, edge cases, division by zero
 - **Exponential Operation** (9 tests) - exp(x) with various inputs and overflow
@@ -85,7 +85,7 @@ tests/
 ├── operations_sin_test.cpp        (5 tests)
 ├── operations_plus_test.cpp       (6 tests)
 ├── operations_minus_test.cpp      (7 tests)
-├── operations_unary_minus_test.cpp (7 tests)
+├── operations_negate_test.cpp     (7 tests)
 ├── operations_multiplies_test.cpp (9 tests)
 ├── operations_divides_test.cpp    (9 tests)
 ├── operations_exp_test.cpp        (9 tests)
@@ -132,9 +132,9 @@ auto dvalue(const duo<T> &n) const
 }
 ```
 
-### Unary Minus Implementation
+### Negate Implementation
 ```cpp
-struct unary_minus : unary_operation<unary_minus>
+struct negate : unary_operation<negate>
 {
     template <class T>
     auto value(const T &v) const { return -v; }
@@ -147,7 +147,7 @@ struct unary_minus : unary_operation<unary_minus>
 ## 🎯 Impact
 
 - **Correctness**: Fixed mathematically incorrect behavior in logarithm derivatives
-- **Completeness**: Added missing fundamental unary minus operation
+- **Completeness**: Added missing fundamental negate operation
 - **Maintainability**: Improved code quality with correct parameter naming
 - **Reliability**: Comprehensive test coverage ensures fixes work correctly
 
