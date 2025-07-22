@@ -7,65 +7,76 @@ namespace dual
 /// @brief Represents a scalar value with associated derivative storage.
 ///
 /// @tparam T The underlying scalar type (e.g., float, double, etc.).
-/// @tparam Dn Parameter pack of derivative indices used to define associated derivative storage.
+/// @tparam Dn Parameter pack of derivative indices used to define associated 
+///            derivative storage.
 template <class T, std::size_t... Dn>
 struct number
 {
-	/// @brief Type alias for the underlying scalar type.
-	using value_type = T;
+    /// @brief Type alias for the underlying scalar type.
+    using value_type = T;
 
-	/// @brief Default constructor.
-	explicit number() = default;
+    /// @brief Default constructor.
+    explicit number() = default;
 
-	/// @brief Constructor initializing the scalar value.
-	/// @param init The initial value to store.
-	explicit number(const T &init) : value_{init}, dvalues_{} {}
+    /// @brief Constructor initializing the scalar value.
+    /// @param init The initial value to store.
+    explicit number(const T &init) : value_{init}, dvalues_{} {}
 
-	/// @brief Implicit conversion to the stored scalar value.
-	/// @return Constant reference to the stored value.
-	operator const T &() const { return value_; }
+    /// @brief Implicit conversion to the stored scalar value.
+    /// @return Constant reference to the stored value.
+    operator const T &() const 
+    { 
+        return value_; 
+    }
 
-	/// @brief Returns the stored scalar value.
-	/// @return Constant reference to the stored value.
-	auto value() const -> const auto & { return value_; }
+    /// @brief Returns the stored scalar value.
+    /// @return Constant reference to the stored value.
+    auto value() const -> const auto & 
+    { 
+        return value_; 
+    }
 
-	/// @brief Sets the stored scalar value.
-	/// @param value The value to store.
-	void value(const T &value) { value_ = value; }
+    /// @brief Sets the stored scalar value.
+    /// @param value The value to store.
+    void value(const T &value) 
+    { 
+        value_ = value; 
+    }
 
-	/// @brief Retrieves the value of the D-th associated derivative.
-	/// @tparam D The derivative index to retrieve (must be in Dn...).
-	/// @return Constant reference to the stored derivative value.
-	template <std::size_t D>
-	auto dvalue() const -> const auto &
-	{
-		return std::get<dvalue_type<D>>(dvalues_).value;
-	}
+    /// @brief Retrieves the value of the D-th associated derivative.
+    /// @tparam D The derivative index to retrieve (must be in Dn...).
+    /// @return Constant reference to the stored derivative value.
+    template <std::size_t D>
+    auto dvalue() const -> const auto &
+    {
+        return std::get<dvalue_type<D>>(dvalues_).value;
+    }
 
-	/// @brief Sets the value of the D-th associated derivative.
-	/// @tparam D The derivative index to set (must be in Dn...).
-	/// @param value The value to store for the derivative.
-	template <std::size_t D>
-	void dvalue(const T &value)
-	{
-		std::get<dvalue_type<D>>(dvalues_).value = value;
-	}
-  protected:
-	/// @brief Helper type representing the storage for a specific derivative.
-	/// @tparam D Derivative index.
-	template <std::size_t D>
-	struct dvalue_type
-	{
-		/// @brief The stored value of the derivative, initialized to 1 by default.
-		T value{1.0};
-	};
+    /// @brief Sets the value of the D-th associated derivative.
+    /// @tparam D The derivative index to set (must be in Dn...).
+    /// @param value The value to store for the derivative.
+    template <std::size_t D>
+    void dvalue(const T &value)
+    {
+        std::get<dvalue_type<D>>(dvalues_).value = value;
+    }
 
-  private:
-	/// @brief The stored scalar value.
-	T value_{};
+protected:
+    /// @brief Helper type representing the storage for a specific derivative.
+    /// @tparam D Derivative index.
+    template <std::size_t D>
+    struct dvalue_type
+    {
+        /// @brief The stored value of the derivative, initialized to 1 by default.
+        T value{1.0};
+    };
 
-	/// @brief Tuple of derivative value storage.
-	std::tuple<dvalue_type<Dn>...> dvalues_;
+private:
+    /// @brief The stored scalar value.
+    T value_{};
+
+    /// @brief Tuple of derivative value storage.
+    std::tuple<dvalue_type<Dn>...> dvalues_;
 };
 
 /// @brief Type trait to detect if a type is a specialization of number<T, S>.
