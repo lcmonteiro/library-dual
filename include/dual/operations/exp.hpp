@@ -1,54 +1,78 @@
+/// @file exp.hpp
+/// @brief Defines exponential operations for dual numbers, including derivative computations
+///        and element-wise array transforms.
+
 #pragma once
 
 #include <cmath>
-
 #include "dual/operations.hpp"
 
 namespace dual
 {
-struct exp : unary_operation<exp>
-{
-	template <class T>
-	auto value(const T &v) const
-	{
-		return std::exp(v);
-	}
+  /// @brief Functor for computing the exponential function and its derivative for dual numbers.
+  struct exp : unary_operation<exp>
+  {
+    /// @brief Computes the exponential of a value.
+    /// @tparam T The numeric type of the value.
+    /// @param v The input value.
+    /// @return The exponential of v.
+    template <class T>
+    auto value(const T &v) const
+    {
+      return std::exp(v);
+    }
 
-	template <class T>
-	auto dvalue(const duo<T> &n) const
-	{
-		return std::exp(n.v) * n.d;
-	}
-};
+    /// @brief Computes the derivative of the exponential function.
+    /// @tparam T The numeric type of the value.
+    /// @param n A duo containing the input value and its derivative.
+    /// @return The derivative of exp(n.v), which is exp(n.v) * n.d.
+    template <class T>
+    auto dvalue(const duo<T> &n) const
+    {
+      return std::exp(n.v) * n.d;
+    }
+  };
 } // namespace dual
 
 namespace std
 {
-template <class T, dual::exp::enable_t<T> = 0>
-inline auto exp(const T &n)
-{
-	return std::invoke(dual::exp{}, n);
-}
+  /// @brief Overloads the standard exp function for dual numbers.
+  /// @tparam T The numeric type.
+  /// @param n The dual number.
+  /// @return The exponential of the dual number.
+  template <class T, dual::exp::enable_t<T> = 0>
+  inline auto exp(const T &n)
+  {
+    return std::invoke(dual::exp{}, n);
+  }
 } // namespace std
 
 namespace dual
 {
-struct exp_transform : transform_unary_operation<exp_transform>
-{
-	template <class T>
-	auto transform(const T &n) const
-	{
-		return std::exp(n);
-	}
-};
+  /// @brief Functor for element-wise exponential transformation on dual arrays.
+  struct exp_transform : transform_unary_operation<exp_transform>
+  {
+    /// @brief Applies the exponential transformation to an array element.
+    /// @tparam T The numeric type of the element.
+    /// @param n The element.
+    /// @return The exponential of the element.
+    template <class T>
+    auto transform(const T &n) const
+    {
+      return std::exp(n);
+    }
+  };
 } // namespace dual
 
 namespace std
 {
-template <class T, dual::exp_transform::enable_t<T> = 0>
-inline auto exp(const T &n)
-{
-	return std::invoke(dual::exp_transform{}, n);
-}
+  /// @brief Overloads the standard exp function for arrays of dual numbers.
+  /// @tparam T The array type.
+  /// @param n The array of dual numbers.
+  /// @return An array of exponentials of the dual numbers.
+  template <class T, dual::exp_transform::enable_t<T> = 0>
+  inline auto exp(const T &n)
+  {
+    return std::invoke(dual::exp_transform{}, n);
+  }
 } // namespace std
-
