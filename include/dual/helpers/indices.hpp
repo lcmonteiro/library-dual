@@ -36,6 +36,7 @@ namespace dual
   /// @brief Checks if I is present in the index pack Is.
   /// @tparam I Index to check.
   /// @tparam Is Index pack.
+  template <size_t I, size_t... Is>
   constexpr bool contains = ((I == Is) || ...);
 
   // ========== FILTER ================
