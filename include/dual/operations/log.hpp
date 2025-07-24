@@ -6,7 +6,7 @@
 
 #include <cmath>
 #include <limits>
-#include "dual/operations.hpp"
+#include "dual/helpers/operations.hpp"
 
 namespace dual
 {

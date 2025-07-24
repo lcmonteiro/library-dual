@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "dual/operations.hpp"
+#include "dual/helpers/operations.hpp"
 
 namespace dual
 {

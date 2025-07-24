@@ -5,7 +5,7 @@
 #pragma once
 
 #include <cmath>
-#include "dual/operations.hpp"
+#include "dual/helpers/operations.hpp"
 
 namespace dual
 {
