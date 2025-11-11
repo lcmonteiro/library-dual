@@ -1,0 +1,9 @@
+BasedOnStyle: Google
+Language: Cpp
+
+# Narrow width for phone screens
+ColumnLimit: 80
+
+# Indentation
+IndentWidth: 2
+TabWidth: 2
