@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <functional>
+
 #include "dual/array.hpp"
 
 namespace dual {

@@ -4,9 +4,10 @@
 
 #pragma once
 
+#include <algorithm>
 #include <tuple>
 
-#include "helpers/indices.hpp"
+#include "dual/helpers/indices.hpp"
 
 namespace dual {
 
